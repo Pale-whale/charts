@@ -6,7 +6,7 @@
   valueFrom:
     secretKeyRef:
       name:  {{ .Values.provider.user.extraSecret.name }}
-      key:  {{ .Values.provider.user.extraSecret.usernameKey }}
+      key:  {{ .Values.provider.user.extraSecret.userKey }}
 {{- else }}
   value: {{ .Values.provider.user.name | squote }}
 {{- end }}
@@ -65,7 +65,7 @@
   value: '9091'
 - name: TRANSMISSION_RPC_USERNAME
 {{- if .Values.rpc.user.extraSecret }}
-- valueFrom:
+  valueFrom:
     secretKeyRef:
       name: {{ .Values.rpc.user.extraSecret.name }}
       key: {{ .Values.rpc.user.extraSecret.userKey }}
