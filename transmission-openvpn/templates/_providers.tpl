@@ -19,8 +19,10 @@
 {{- else }}
   value: {{ .Values.provider.user.password | squote }}
 {{- end }}
+{{- if eq .Values.provider.name "custom" }}
 - name: OPENVPN_CONFIG
   value: {{ .Values.provider.endpoint | squote }}
+{{- end }}
 {{- with .Values.provider.extraOpts }}
 - name: OPENVPN_OPTS
   value: {{ . | squote }}
