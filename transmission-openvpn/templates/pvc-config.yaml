@@ -1,0 +1,12 @@
+{{- if .Values.persistence.config.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "transmission-openvpn.fullname" . | printf "config-%s" }}
+spec:
+  storageClassName: {{ .Values.persistence.config.storageClassName }}
+  accessModes: {{- .Values.persistence.config.accessModes | toYaml | nindent 2 }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.config.size }}
+{{- end }}

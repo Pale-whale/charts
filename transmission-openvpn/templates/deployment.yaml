@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "transmission-openvpn.fullname" . }}
+  labels:
+    {{- include "transmission-openvpn.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "transmission-openvpn.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "transmission-openvpn.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "transmission-openvpn.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env: {{- include "provider-config" $ | nindent 10 -}}
+          {{- include "rpc-config" $ | nindent 10 }}
+          - name: TZ
+            value: {{ .Values.timezone | squote }}
+          - name: PUID
+            value: {{ .Values.user.uid | squote }}
+          - name: PGID
+            value: {{ .Values.user.gid | squote }}
+          {{- if .Values.persistence.downloads.enabled }}
+          - name: TRANSMISSION_DOWNLOAD_DIR
+            value: '/downloads'
+          {{- end }}
+          {{- with .Values.extraEnv }}
+          {{- . | toYaml | squote | nindent 10 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 9091
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - name: dev-tun
+            mountPath: "/dev/net/tun"
+          {{- range $filename, $_ := .Values.provider.customOVPN }}
+          - name: {{ $filename | splitList "." | first | printf "ovpn-%s" }}
+            mountPath: {{ printf "/etc/openvpn/custom/%s" $filename }}
+            subPath: {{ $filename }}
+          {{- end }}
+          {{- if .Values.persistence.config.enabled }}
+          - name: transmission-data
+            mountPath: /data
+          {{- end }}
+          {{- with .Values.extraVolumeMounts }}
+          {{- . | toYaml | nindent 10 }}
+          {{- end }}
+          {{- if .Values.persistence.downloads.enabled }}
+          - name: transmission-downloads
+            mountPath: /downloads
+          {{- end }}
+          {{- with .Values.extraVolumeMounts }}
+          {{- . | toYaml | nindent 10 }}
+          {{- end }}
+      volumes:
+      - name: dev-tun
+        hostPath:
+          path: "/dev/net/tun"
+      {{- range $filename, $_ := .Values.provider.customOVPN }}
+      - name: {{ $filename | splitList "." | first | printf "ovpn-%s" }}
+        secret:
+          secretName: {{ include "transmission-openvpn.fullname" $ }}
+      {{- end }}
+      {{- if .Values.persistence.config.enabled }}
+      - name: transmission-data
+        persistentVolumeClaim:
+          claimName: {{ include "transmission-openvpn.fullname" . | printf "config-%s" }}
+      {{- end }}
+      {{- if .Values.persistence.downloads.enabled }}
+      - name: transmission-downloads
+        persistentVolumeClaim:
+          claimName: {{ include "transmission-openvpn.fullname" . | printf "downloads-%s" }}
+      {{- end }}
+      {{- with .Values.extraVolumes }}
+      {{- . | toYaml | nindent 6 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

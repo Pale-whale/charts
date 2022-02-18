@@ -1,0 +1,12 @@
+{{- if .Values.persistence.downloads.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "transmission-openvpn.fullname" . | printf "downloads-%s" }}
+spec:
+  storageClassName: {{ .Values.persistence.downloads.storageClassName }}
+  accessModes: {{- .Values.persistence.downloads.accessModes | toYaml | nindent 2 }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.downloads.size }}
+{{- end }}
