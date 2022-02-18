@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pms.fullname" . }}
+  labels:
+    {{- include "pms.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "pms.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "pms.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "pms.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 32400    # Server
+              name: http
+              protocol: TCP
+            - containerPort: 3005     # Plex companion
+              protocol: TCP
+            - containerPort: 8324     # Roku plex companion
+              protocol: TCP
+            - containerPort: 32469    # DLNA Server
+              protocol: TCP
+            - containerPort: 1900     # DLNA Server
+              protocol: UDP
+            - containerPort: 32410    # Net discovery
+              protocol: UDP
+            - containerPort: 32412    # Net discovery
+              protocol: UDP
+            - containerPort: 32413    # Net discovery
+              protocol: UDP
+            - containerPort: 32414    #Net discovery
+              protocol: UDP
+          env:
+          - name: TZ
+            value: {{ .Values.timezone }}
+          - name: PLEX_CLAIM
+            valueFrom:
+              secretKeyRef:
+                {{- if not .Values.externalClaimSecret }}
+                name: {{ include "pms.fullname" . }}
+                key: claim
+                {{- else }}
+                name: {{ .Values.externalClaimSecret.name }}
+                key: {{ .Values.externalClaimSecret.key }}
+                {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /identity
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /identity
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.persistence.config.enabled | or .Values.persistence.data.enabled }}
+          volumeMounts:
+          {{- end }}
+          {{- if .Values.persistence.config.enabled }}
+            - name: config
+              mountPath: "/config"
+          {{- end }}
+          {{- if .Values.persistence.data.enabled }}
+            - name: data
+              mountPath: "/data"
+          {{- end }}
+      {{- if .Values.persistence.config.enabled | or .Values.persistence.data.enabled }}
+      volumes:
+      {{- end }}
+      {{- if .Values.persistence.config.enabled }}
+      - name: config
+        persistentVolumeClaim:
+          claimName: {{ include "pms.fullname" . | printf "config-%s" }}
+      {{- end }}
+      {{- if .Values.persistence.data.enabled }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ include "pms.fullname" . | printf "data-%s" }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

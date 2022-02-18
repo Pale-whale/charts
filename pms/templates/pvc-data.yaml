@@ -1,0 +1,14 @@
+{{- if .Values.persistence.data.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "pms.fullname" . | printf "data-%s" }}
+spec:
+  storageClassName: {{ .Values.persistence.data.storageClassName }}
+  accessModes: {{- .Values.persistence.data.accessModes | toYaml | nindent 2 }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.data.size }}
+{{- end }}
+
+
