@@ -26,6 +26,10 @@ serviceAccount:
 # Configures plex timezone, fìnd the list here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone: 'Europe/Paris'
 
+user:
+  uid: 1000
+  gid: 1000
+
 # The claim token for the server to obtain a real server token. If not provided, server is will not be automatically logged in.
 # If server is already logged in, this parameter is ignored. You can obtain a claim token to login your server to your plex account by visiting https://www.plex.tv/claim
 claim: ''

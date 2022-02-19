@@ -56,6 +56,10 @@ spec:
           env:
           - name: TZ
             value: {{ .Values.timezone }}
+          - name: PUID
+            value: {{ .Values.user.uid | squote }}
+          - name: PGID
+            value: {{ .Values.user.gid | squote }}
           - name: PLEX_CLAIM
             valueFrom:
               secretKeyRef:
