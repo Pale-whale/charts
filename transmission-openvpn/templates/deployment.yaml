@@ -44,7 +44,7 @@ spec:
             value: '/downloads'
           {{- end }}
           {{- with .Values.extraEnv }}
-          {{- . | toYaml | squote | nindent 10 }}
+          {{- . | toYaml | nindent 10 }}
           {{- end }}
           ports:
             - name: http
