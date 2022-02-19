@@ -76,9 +76,9 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.persistence.config.enabled | or .Values.persistence.data.enabled }}
           volumeMounts:
-          {{- end }}
+            - name: dri
+              mountPath: "/dev/dri"
           {{- if .Values.persistence.config.enabled }}
             - name: config
               mountPath: "/config"
@@ -87,9 +87,10 @@ spec:
             - name: data
               mountPath: "/data"
           {{- end }}
-      {{- if .Values.persistence.config.enabled | or .Values.persistence.data.enabled }}
       volumes:
-      {{- end }}
+      - name: dri
+        hostPath:
+          path: "/dev/dri"
       {{- if .Values.persistence.config.enabled }}
       - name: config
         persistentVolumeClaim:
