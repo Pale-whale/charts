@@ -1,0 +1,30 @@
+{{- range $idx, $_ := .Values.services }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-%d" (include "pi-hole.fullname" $) $idx }}
+  labels:
+    {{- include "pi-hole.labels" $ | nindent 4 }}
+  {{- with .annotations }}
+  annotations: 
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .type }}
+  {{- with .loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  ports:
+  {{- range .ports }}
+    - port: {{ .port }}
+      targetPort: {{ .name }}
+      protocol: {{ .protocol | default "TCP" }}
+      name: {{ .name }}
+  {{- end }}
+  selector:
+    {{- include "pi-hole.selectorLabels" $ | nindent 4 }}
+{{- end }}
