@@ -34,25 +34,13 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 32400    # Server
-              name: http
-              protocol: TCP
-            - containerPort: 3005     # Plex companion
-              protocol: TCP
-            - containerPort: 8324     # Roku plex companion
-              protocol: TCP
-            - containerPort: 32469    # DLNA Server
-              protocol: TCP
-            - containerPort: 1900     # DLNA Server
-              protocol: UDP
-            - containerPort: 32410    # Net discovery
-              protocol: UDP
-            - containerPort: 32412    # Net discovery
-              protocol: UDP
-            - containerPort: 32413    # Net discovery
-              protocol: UDP
-            - containerPort: 32414    #Net discovery
-              protocol: UDP
+          {{- range .Values.services }}
+          {{- range .ports }}
+            - name: {{ .name }}
+              containerPort: {{ .port }}
+              protocol: {{ .protocol | default "TCP" }}
+          {{- end }}
+          {{- end }}
           env:
           - name: TZ
             value: {{ .Values.timezone }}
@@ -73,11 +61,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /identity
-              port: http
+              port: {{ ((.Values.services | first).ports | first).name }}
           readinessProbe:
             httpGet:
               path: /identity
-              port: http
+              port: {{ ((.Values.services | first).ports | first).name }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "pi-hole.labels" $ | nindent 4 }}
   {{- with .annotations }}
-  annotations: 
+  annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
 spec:
