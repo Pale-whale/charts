@@ -23,6 +23,9 @@ webPassword:
     #     name: creds
     #     key: password
 
+custom_dns: []
+# toto.com: 127.0.0.1
+
 forwardDns:
   - 1.1.1.1
   - 1.0.0.1

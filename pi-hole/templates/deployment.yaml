@@ -68,8 +68,20 @@ spec:
             httpGet:
               path: /
               port: http
+          {{- if .Values.custom_dns }}
+          volumeMounts:
+            - name: custom-dns
+              mountPath: /etc/pihole/custom.list
+              subPath: custom.list
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      {{- if .Values.custom_dns }}
+      volumes:
+        - name: custom-dns
+          configMap:
+            name: custom-dns
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

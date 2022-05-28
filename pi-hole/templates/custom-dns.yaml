@@ -1,0 +1,11 @@
+{{- if .Values.custom_dns }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-dns
+data:
+  custom.list: |
+    {{- range $fqdn, $addr := .Values.custom_dns }}
+    {{- printf "%s %s" $addr $fqdn | nindent 4 }}
+    {{- end }}
+{{- end }}
