@@ -1,0 +1,9 @@
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: {{ .Values.name }}
+spec:
+  cephVersion:
+    image: {{ printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
+    allowUnsupported: {{ .Values.image.allowUnsupported }}
+{{- .Values.spec | toYaml | nindent 2 }}
