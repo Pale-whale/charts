@@ -75,3 +75,12 @@ spec:
         disabled: false
       osd:
         disabled: false
+
+blockpool:
+  name: main-block-pool
+  failureDomain: host
+  replicated:
+    size: 1
+
+storageclass:
+  name: block
