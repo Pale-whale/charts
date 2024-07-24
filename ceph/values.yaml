@@ -95,9 +95,9 @@ filesystem:
   metadataPool:
     failureDomain: host
     replicated:
-      size: 3
+      size: 1
   dataPools:
     replicated:
       failureDomain: host
       replicated:
-        size: 3
+        size: 1
