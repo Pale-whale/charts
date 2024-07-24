@@ -84,3 +84,20 @@ blockpool:
 
 storageclass:
   name: block
+
+
+filesystem:
+  name: filesystem
+  preserveFilesystemOnDelete: false
+  metadataServer:
+    activeCount: 1
+    activeStandby: false
+  metadataPool:
+    failureDomain: host
+    replicated:
+      size: 3
+  dataPools:
+    replicated:
+      failureDomain: host
+      replicated:
+        size: 3

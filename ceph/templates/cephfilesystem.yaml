@@ -1,0 +1,44 @@
+apiVersion: ceph.rook.io/v1
+kind: CephFilesystem
+metadata:
+  name: {{ .Values.filesystem.name }}
+spec:
+  metadataPool:
+    failureDomain: {{ .Values.filesystem.metadataPool.failureDomain }}
+    replicated:
+      size: {{ .Values.filesystem.metadataPool.replicated.size }}
+  dataPools:
+    {{- range $name, $values := .Values.filesystem.dataPools }}
+    - name: {{ $name }}
+      failureDomain: {{ $values.failureDomain }}
+      replicated:
+        size: {{ $values.replicated.size }}
+    {{- end }}
+  preserveFilesystemOnDelete: {{ .Values.filesystem.preserveFilesystemOnDelete }}
+  metadataServer:
+    activeCount: {{ .Values.metadataServer.activeCount }}
+    activeStandby: {{ .Values.metadataServer.activeStandby }}
+    # A key/value list of annotations
+    annotations:
+    #  key: value
+    placement:
+    #  nodeAffinity:
+    #    requiredDuringSchedulingIgnoredDuringExecution:
+    #      nodeSelectorTerms:
+    #      - matchExpressions:
+    #        - key: role
+    #          operator: In
+    #          values:
+    #          - mds-node
+    #  tolerations:
+    #  - key: mds-node
+    #    operator: Exists
+    #  podAffinity:
+    #  podAntiAffinity:
+    #  topologySpreadConstraints:
+    resources:
+    #  limits:
+    #    memory: "1024Mi"
+    #  requests:
+    #    cpu: "500m"
+    #    memory: "1024Mi"
