@@ -16,29 +16,5 @@ spec:
     {{- end }}
   preserveFilesystemOnDelete: {{ .Values.filesystem.preserveFilesystemOnDelete }}
   metadataServer:
-    activeCount: {{ .Values.metadataServer.activeCount }}
-    activeStandby: {{ .Values.metadataServer.activeStandby }}
-    # A key/value list of annotations
-    annotations:
-    #  key: value
-    placement:
-    #  nodeAffinity:
-    #    requiredDuringSchedulingIgnoredDuringExecution:
-    #      nodeSelectorTerms:
-    #      - matchExpressions:
-    #        - key: role
-    #          operator: In
-    #          values:
-    #          - mds-node
-    #  tolerations:
-    #  - key: mds-node
-    #    operator: Exists
-    #  podAffinity:
-    #  podAntiAffinity:
-    #  topologySpreadConstraints:
-    resources:
-    #  limits:
-    #    memory: "1024Mi"
-    #  requests:
-    #    cpu: "500m"
-    #    memory: "1024Mi"
+    activeCount: {{ .Values.filesystem.metadataServer.activeCount }}
+    activeStandby: {{ .Values.filesystem.metadataServer.activeStandby }}
