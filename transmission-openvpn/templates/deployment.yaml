@@ -65,8 +65,7 @@ spec:
             mountPath: "/dev/net/tun"
           {{- range $filename, $_ := .Values.provider.customOVPN }}
           - name: {{ $filename | splitList "." | first | printf "ovpn-%s" }}
-            mountPath: {{ printf "/etc/openvpn/custom/%s" $filename }}
-            subPath: {{ $filename }}
+            mountPath: {{ print "/etc/openvpn/custom/" }}
           {{- end }}
           {{- if .Values.persistence.config.enabled }}
           - name: transmission-data
