@@ -63,9 +63,9 @@ spec:
           volumeMounts:
           - name: dev-tun
             mountPath: "/dev/net/tun"
-          {{- range $filename, $_ := .Values.provider.customOVPN }}
-          - name: {{ $filename | splitList "." | first | printf "ovpn-%s" }}
-            mountPath: {{ print "/etc/openvpn/custom/" }}
+          {{- if eq .Values.provider.name "custom" }}
+          - name: custom-ovpn
+            mountPath: "/etc/openvpn/custom/"
           {{- end }}
           {{- if .Values.persistence.config.enabled }}
           - name: transmission-data
@@ -85,10 +85,10 @@ spec:
       - name: dev-tun
         hostPath:
           path: "/dev/net/tun"
-      {{- range $filename, $_ := .Values.provider.customOVPN }}
-      - name: {{ $filename | splitList "." | first | printf "ovpn-%s" }}
+      {{- if eq .Values.provider.name "custom" }}
+      - name: custom-ovpn
         secret:
-          secretName: {{ include "transmission-openvpn.fullname" $ }}
+          secretName: custom-ovpn
       {{- end }}
       {{- if .Values.persistence.config.enabled }}
       - name: transmission-data
