@@ -54,6 +54,8 @@ spec:
           - name: TRANSMISSION_DOWNLOAD_DIR
             value: '/downloads'
           {{- end }}
+          - name: TRANSMISSION_WATCH_DIR
+            value: '/config/watch'
           {{- with .Values.extraEnv }}
           {{- . | toYaml | nindent 10 }}
           {{- end }}
