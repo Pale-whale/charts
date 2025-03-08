@@ -80,7 +80,7 @@ spec:
           {{- end }}
           {{- if .Values.persistence.config.enabled }}
           - name: transmission-data
-            mountPath: /data
+            mountPath: /config
           {{- end }}
           {{- with .Values.extraVolumeMounts }}
           {{- . | toYaml | nindent 10 }}
