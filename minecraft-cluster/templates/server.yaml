@@ -1,10 +1,12 @@
 apiVersion: mcr.mcr-operator.io/v1alpha1
-kind: MinecraftProxy
+kind: MinecraftServer
 metadata:
-  name: velocity
+  name: lobby
 spec:
   cluster:
     name: test-cluster
+  tags:
+    - lobby
   eula: true
   type: VANILLA
   difficulty: normal
