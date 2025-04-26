@@ -16,7 +16,7 @@ spec:
   ops:
     - nouns_lover
   mode: survival
-  force_gamemode: true
+  forceGamemode: true
   resources:
     requests:
       cpu: 1
