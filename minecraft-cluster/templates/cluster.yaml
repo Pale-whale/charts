@@ -1,0 +1,6 @@
+apiVersion: mcr.mcr-operator.io/v1alpha1
+kind: MinecraftCluster
+metadata:
+  labels:
+  name: test-cluster
+spec:

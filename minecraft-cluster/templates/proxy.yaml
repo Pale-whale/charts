@@ -1,0 +1,9 @@
+apiVersion: mcr.mcr-operator.io/v1alpha1
+kind: MinecraftProxy
+metadata:
+  name: velocity
+spec:
+  cluster:
+    name: test-cluster
+  replicas: 1
+  
