@@ -5,6 +5,7 @@ metadata:
 spec:
   cluster:
     name: test-cluster
+  host: test.palewhale.fr
   replicas: 1
-  version: 3.4.0
+  version: 3.4.0-SNAPSHOT
   
