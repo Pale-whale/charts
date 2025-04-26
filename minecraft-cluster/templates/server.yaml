@@ -7,6 +7,7 @@ spec:
     name: test-cluster
   tags:
     - lobby
+  version: 1.21.4
   eula: true
   type: VANILLA
   difficulty: normal
