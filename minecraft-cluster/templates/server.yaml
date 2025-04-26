@@ -1,0 +1,20 @@
+apiVersion: mcr.mcr-operator.io/v1alpha1
+kind: MinecraftProxy
+metadata:
+  name: velocity
+spec:
+  cluster:
+    name: test-cluster
+  eula: true
+  type: VANILLA
+  difficulty: normal
+  whitelist:
+    - nouns_lover
+  ops:
+    - nouns_lover
+  mode: survival
+  force_gamemode: true
+  resources:
+    requests:
+      cpu: 1
+      memory: 2G
