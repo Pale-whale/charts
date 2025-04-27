@@ -1,0 +1,24 @@
+apiVersion: mcr.mcr-operator.io/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: sundown-two
+spec:
+  cluster:
+    name: test-cluster
+  tags:
+    - adventure
+  version: 1.20.1
+  eula: true
+  difficulty: normal
+  whitelist:
+    - nouns_lover
+    - nouns_mommy
+  ops:
+    - nouns_lover
+  mode: adventure
+  downloadWorldUrl: http://163.172.47.163:3069/sundowntwo.zip
+  forceGamemode: true
+  resources:
+    requests:
+      cpu: 1
+      memory: 2G
