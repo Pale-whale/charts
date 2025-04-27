@@ -8,4 +8,7 @@ spec:
   host: test.palewhale.fr
   replicas: 1
   version: 3.4.0-SNAPSHOT
+  service:
+    loadBalancerIP: 172.17.69.2
+    type: LoadBalancer
   

@@ -9,7 +9,6 @@ spec:
     - lobby
   version: 1.21.4
   eula: true
-  type: VANILLA
   difficulty: normal
   whitelist:
     - nouns_lover

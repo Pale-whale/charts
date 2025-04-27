@@ -4,3 +4,4 @@ metadata:
   labels:
   name: test-cluster
 spec:
+  disableRouter: true
