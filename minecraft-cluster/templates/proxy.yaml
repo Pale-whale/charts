@@ -1,5 +1,5 @@
 apiVersion: mcr.mcr-operator.io/v1alpha1
-kind: MinecraftProxy
+kind: Proxy
 metadata:
   name: velocity
 spec:

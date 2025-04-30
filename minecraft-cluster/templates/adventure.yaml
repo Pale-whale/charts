@@ -1,5 +1,5 @@
 apiVersion: mcr.mcr-operator.io/v1alpha1
-kind: MinecraftServer
+kind: Server
 metadata:
   name: sundown-two
 spec:
